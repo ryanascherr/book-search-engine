@@ -27,13 +27,14 @@ const resolvers = {
 
   Mutations: {
     addUser: async (parent, { username, email }) => {
+      console.log("Hi!");
       const user = await User.create({ username, email });
       const token = signToken(user);
       return { token, user};
     },
     login: async ({ email, password }) => {
-      const user = await User.findOne({ email });
-
+      const user = await User.findOne({ email: email });
+      console.log(user);
       if (!user) {
         throw new AuthenticationError('No user found with this email address');
 
@@ -53,7 +54,7 @@ const resolvers = {
     // },
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
-        const book = await Thought.findOneAndDelete({
+        const book = await Book.findOneAndDelete({
           _id: bookId,
           // thoughtAuthor: context.user.username,
         });
