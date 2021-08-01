@@ -4,19 +4,19 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find().populate('books');
-    },
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('books');
-    },
-    books: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Book.find(params);
-    },
-    book: async (parent, { bookId }) => {
-      return Book.findOne({ _id: bookId });
-    },
+    // users: async () => {
+    //   return User.find().populate('books');
+    // },
+    // user: async (parent, { username }) => {
+    //   return User.findOne({ username }).populate('books');
+    // },
+    // books: async (parent, { username }) => {
+    //   const params = username ? { username } : {};
+    //   return Book.find(params);
+    // },
+    // book: async (parent, { bookId }) => {
+    //   return Book.findOne({ _id: bookId });
+    // },
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate('books');
@@ -25,7 +25,7 @@ const resolvers = {
     }
   },
 
-  Mutations: {
+  Mutation: {
     addUser: async (parent, { username, email }) => {
       console.log("Hi!");
       const user = await User.create({ username, email });
@@ -37,18 +37,18 @@ const resolvers = {
       console.log(user);
       if (!user) {
         throw new AuthenticationError('No user found with this email address');
-
-        const correctPw = await user.isCorrectPassword(password);
-
-        if (!correctPw) {
-          throw new AuthenticationError('Incorrect credentials');
-        }
-
-        const token = signToken(user);
-
-        return { token, user };
       }
-    },
+
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError('Incorrect credentials');
+      }
+
+      const token = signToken(user);
+
+      return { token, user };
+      },
     // saveBook: {
       
     // },
